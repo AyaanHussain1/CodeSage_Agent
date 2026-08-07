@@ -3,7 +3,7 @@
 // this needs to be your deployed backend's URL instead of localhost.
 const API_URL =  process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
-    : "https://dependable-connection-production-664c.up.railway.app";;
+    : "https://dependable-connection-production-664c.up.railway.app";
 
 const folderInput = document.getElementById("folderInput");
 const openFolderBtn = document.getElementById("openFolderBtn");

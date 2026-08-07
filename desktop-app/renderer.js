@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:8000";
+const API_URL =  process.env.NODE_ENV === "development"
+    ? "http://localhost:8000"
+    : "https://dependable-connection-production-664c.up.railway.app";
 
 const openFolderBtn = document.getElementById("openFolderBtn");
 const indexBtn = document.getElementById("indexBtn");
