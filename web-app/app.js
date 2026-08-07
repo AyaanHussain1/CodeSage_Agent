@@ -1,10 +1,10 @@
 // CHANGE THIS when you deploy the backend somewhere public (e.g. Railway).
 // Locally, this points at your own machine; for the link you show recruiters,
 // this needs to be your deployed backend's URL instead of localhost.
-const API_URL =  process.env.NODE_ENV === "development"
-    ? "http://localhost:8000"
-    : "https://dependable-connection-production-664c.up.railway.app";
-
+const API_URL =
+    window.location.hostname === "localhost"
+        ? "http://localhost:8000"
+        : "https://dependable-connection-production-41ff.up.railway.app";
 const folderInput = document.getElementById("folderInput");
 const openFolderBtn = document.getElementById("openFolderBtn");
 const indexBtn = document.getElementById("indexBtn");
