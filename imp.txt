@@ -1,0 +1,4 @@
+uvicorn server:app --reload --port 8000
+python -m http.server 8080 - webapp
+http://localhost:8080
+desktop app npm install - npm start

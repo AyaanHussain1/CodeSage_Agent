@@ -1,5 +1,7 @@
 // Address of your local Python backend (see backend/server.py)
-const API_URL = "http://localhost:8000";
+const API_URL =  process.env.NODE_ENV === "development"
+    ? "http://localhost:8000"
+    : "https://dependable-connection-production-664c.up.railway.app";;
 
 // --- Grab all the HTML elements we need ---
 const videoIdInput = document.getElementById("videoIdInput");

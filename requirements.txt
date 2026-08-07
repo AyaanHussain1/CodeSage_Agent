@@ -1,7 +1,7 @@
 openai
 langchain
 langchain-community
-dotenv
+python-dotenv
 youtube-transcript-api
 langchain-openai
 faiss-cpu
