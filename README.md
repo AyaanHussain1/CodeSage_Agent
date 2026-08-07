@@ -2,7 +2,7 @@
 
 An AI agent that answers questions about YouTube tutorials and your own codebase — available as a Chrome extension, a desktop app, and a web app, all powered by one shared backend.
 
-**Live demo:** [https://your-vercel-url-here.vercel.app](https://vercel.com/syed-ayaan-hussains-projects/code-sage-agent]
+**Live demo:** https://your-vercel-url-here.vercel.app](https://vercel.com/syed-ayaan-hussains-projects/code-sage-agent
 
 ---
 
