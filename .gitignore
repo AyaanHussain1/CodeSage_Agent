@@ -1,0 +1,124 @@
+# ==========================
+# Python
+# ==========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Environment Variables
+.env
+.env.*
+
+# Python Cache
+.pytest_cache/
+.mypy_cache/
+.cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# ==========================
+# Vector Stores (FAISS/Chroma)
+# ==========================
+Embedding_vector_store/
+Project_vector_store/
+vector_store/
+faiss/
+chroma/
+chroma_db/
+
+# ==========================
+# Uploaded Files
+# ==========================
+uploaded_projects/
+uploads/
+
+# ==========================
+# Transcript Cache
+# ==========================
+transcript_cache/
+
+# ==========================
+# Logs
+# ==========================
+*.log
+logs/
+
+# ==========================
+# Models
+# ==========================
+models/
+*.gguf
+*.bin
+*.pt
+*.pth
+*.onnx
+
+# ==========================
+# Node
+# ==========================
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build
+dist/
+build/
+
+# Electron
+out/
+release/
+
+# ==========================
+# Database
+# ==========================
+*.db
+*.sqlite
+*.sqlite3
+
+# ==========================
+# Temporary
+# ==========================
+tmp/
+temp/
+
+# Node
+node_modules/
+
+# Electron build
+desktop-app/node_modules/
+
+# Vector stores
+Project_vector_store/
+Embedding_vector_store/
+
+# Uploaded files
+uploaded_projects/
+
+# Cache
+transcript_cache/
+
+# Python
+__pycache__/
+.venv/
+venv/
+
+# Secrets
+.env

@@ -1,0 +1,17 @@
+openai
+langchain
+langchain-community
+dotenv
+youtube-transcript-api
+langchain-openai
+faiss-cpu
+tiktoken
+langchain-text-splitters
+deep-translator
+faiss-cpu
+fastapi
+uvicorn
+python-multipart
+pypdf
+python-docx
+python-multipart

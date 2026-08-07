@@ -1,0 +1,12 @@
+{
+  "name": "project-chat-desktop",
+  "version": "1.0.0",
+  "description": "IDE-style desktop app: browse a project folder and ask questions about your code.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^43.3.0"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Video Transcript Chat",
+  "version": "1.0",
+  "description": "Ask questions about a YouTube video's transcript.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "permissions": ["tabs"],
+  "host_permissions": [
+    "http://localhost:8000/*",
+    "https://www.youtube.com/*"
+  ]
+}
