@@ -1,8 +1,9 @@
 # Desktop App Setup
 
-This is a separate app from the Chrome extension, but shares the same backend
-(`backend/server.py`) — it just calls new endpoints for reading local files
-instead of YouTube videos.
+This is a separate app from the Chrome extension, but shares the same local
+backend (`backend/server.py`) — it calls endpoints for reading local files
+instead of YouTube videos. The desktop app must use the local backend because
+the deployed web backend cannot access folders on your computer.
 
 ## 1. Install the new Python packages (backend side)
 

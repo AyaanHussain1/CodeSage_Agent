@@ -1,17 +1,14 @@
 from embedding_and_retrieving import search_transcript
-from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 
-# Necessary details before this project
-load_dotenv(override=True)
 model = ChatOpenAI()
 
 video_id = "ukzFI9rgwfU"
 
-def answer_query(video_id,query,to_translate="en",k=2):
+def answer_query(video_id,query,to_translate="en",k=4):
     # setting prompt 
     prompt = PromptTemplate(template="""
     You are a helpful assistant answering questions about a YouTube video

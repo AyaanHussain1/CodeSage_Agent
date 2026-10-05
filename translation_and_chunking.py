@@ -10,7 +10,7 @@ import time
 import json
 import os
 # Necessary details before this project
-load_dotenv(override=True)
+load_dotenv()
 model = ChatOpenAI()
 embedding = OpenAIEmbeddings()
 video_id = "ukzFI9rgwfU"

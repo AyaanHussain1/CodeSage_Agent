@@ -1,7 +1,4 @@
-const API_URL =
-    window.location.hostname === "localhost"
-        ? "http://localhost:8000"
-        : "https://dependable-connection-production-41ff.up.railway.app";
+const API_URL = (window.CODESAGE_API_URL || "http://localhost:8000").replace(/\/+$/, "");
 
 const openFolderBtn = document.getElementById("openFolderBtn");
 const indexBtn = document.getElementById("indexBtn");
@@ -55,12 +52,30 @@ openFolderBtn.addEventListener("click", async () => {
   if (!folderPath) return;
 
   currentFolder = folderPath;
-  statusEl.textContent = folderPath;
-  indexBtn.disabled = false;
+  statusEl.textContent = `Loading ${folderPath}…`;
+  indexBtn.disabled = true;
 
-  fileTree.innerHTML = "";
-  const rootList = await buildTree(folderPath);
-  fileTree.appendChild(rootList);
+  fileTree.textContent = "";
+  try {
+    const root = document.createElement("div");
+    const rootRow = document.createElement("div");
+    rootRow.className = "tree-item dir";
+    rootRow.textContent = "📁 " + (folderPath.split(/[\\/]/).filter(Boolean).pop() || folderPath);
+    root.appendChild(rootRow);
+
+    const childrenContainer = document.createElement("div");
+    childrenContainer.className = "tree-children open";
+    childrenContainer.appendChild(await buildTree(folderPath));
+    root.appendChild(childrenContainer);
+
+    rootRow.addEventListener("click", () => childrenContainer.classList.toggle("open"));
+    fileTree.appendChild(root);
+    statusEl.textContent = folderPath;
+    indexBtn.disabled = false;
+  } catch (err) {
+    fileTree.textContent = "Could not load this folder. Is the local backend running?";
+    statusEl.textContent = `Could not load folder: ${err.message}`;
+  }
 });
 
 // ---------- File tree ----------
@@ -72,12 +87,14 @@ async function buildTree(folderPath) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ path: folderPath }),
   });
+  if (!res.ok) {
+    throw new Error(`Folder request failed (${res.status})`);
+  }
   const data = await res.json();
 
   const list = document.createElement("div");
   if (data.error) {
-    list.innerHTML = `<p class="hint">${data.error}</p>`;
-    return list;
+    throw new Error(data.error);
   }
 
   for (const item of data.items) {

@@ -22,7 +22,7 @@ Same underlying pipeline (chunk → embed → retrieve → generate) powers thre
 ```
                         ┌─────────────────────┐
                         │   FastAPI Backend    │
-                        │  (deployed: Railway)  │
+                        │ (separate Python host)│
                         │                       │
                         │  YouTube pipeline:    │
                         │   translate → chunk   │
@@ -56,7 +56,7 @@ All three clients are plain HTML/CSS/JS — no framework — talking to the same
 - **File parsing:** `pypdf`, `python-docx`
 - **Desktop app:** Electron
 - **Frontends:** Vanilla HTML/CSS/JS, `highlight.js` for syntax highlighting
-- **Deployment:** Railway (backend), Vercel (web app)
+- **Deployment:** Python-capable host (backend), Vercel static hosting (web app)
 
 ---
 
@@ -92,6 +92,7 @@ CodeSage/
 - **Multi-format file support** — `.py`, `.js`, `.html`, `.css`, `.md`, `.json`, `.pdf`, `.docx`
 - **IDE-style desktop UI** — resizable file tree, syntax-highlighted preview, chat panel
 - **Code-aware chat** — responses with code render as proper, copyable syntax-highlighted blocks (not flattened plain text)
+- **Coding help** — ask for explanations, debugging guidance, or code proposals based on the indexed project; chat does not modify uploaded files
 - **Source attribution** — project-mode answers cite which file they came from
 
 ---
@@ -107,17 +108,27 @@ venv\Scripts\activate          # Windows
 
 pip install -r requirements.txt
 
-# Create a .env file with:
+# Create a .env file in the repository root with:
 # OPENAI_API_KEY=your-key-here
 
-cd backend
-python -m uvicorn server:app --reload --port 8000
+python -m uvicorn backend.server:app --reload --port 8000
 ```
 
 ### 2. Chrome extension
 1. Go to `chrome://extensions`
 2. Enable Developer Mode
 3. **Load unpacked** → select the `extensions/` folder
+
+To use the YouTube transcript chat as a local webpage instead of opening the
+Chrome extension, keep the backend running, then serve the extension files:
+
+```powershell
+cd extensions
+py -m http.server 8081 --bind 127.0.0.1
+```
+
+Open http://localhost:8081/popup.html and paste the YouTube video ID. In this
+local mode, the page uses the backend at http://localhost:8000.
 
 ### 3. Desktop app
 ```bash
@@ -129,9 +140,10 @@ npm start
 ### 4. Web app
 ```bash
 cd web-app
-python -m http.server 8080 
+python -m http.server 8080
 ```
-Open `[http://localhost:5500](http://localhost:8080)`
+Open http://localhost:8080. The web app expects the backend to be running on
+http://localhost:8000 when served from localhost.
 
 ---
 

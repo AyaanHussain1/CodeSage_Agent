@@ -1,10 +1,12 @@
 // CHANGE THIS when you deploy the backend somewhere public (e.g. Railway).
 // Locally, this points at your own machine; for the link you show recruiters,
 // this needs to be your deployed backend's URL instead of localhost.
-const API_URL =
-    window.location.hostname === "localhost"
-        ? "http://localhost:8000"
-        : "https://codesageagent-4ifokm29.b4a.run/";
+const API_URL = (
+  window.CODESAGE_API_URL ||
+  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:8000"
+    : "https://codesageagent-4ifokm29.b4a.run")
+).replace(/\/+$/, "");
 const folderInput = document.getElementById("folderInput");
 const openFolderBtn = document.getElementById("openFolderBtn");
 const indexBtn = document.getElementById("indexBtn");
@@ -26,6 +28,7 @@ const LANGUAGE_MAP = {
 };
 const PREVIEWABLE_TEXT_EXT = new Set([".py", ".txt", ".md", ".json", ".js", ".html", ".css"]);
 const UPLOADABLE_EXTENSIONS = new Set([".py", ".txt", ".md", ".json", ".js", ".html", ".css", ".pdf", ".docx"]);
+const IGNORED_UPLOAD_DIRS = new Set(["node_modules", "venv", ".venv", "dist", "build", "__pycache__"]);
 const MAX_TOTAL_UPLOAD_SIZE = 100 * 1024 * 1024; // 100 MB
 const MAX_UPLOAD_FILE_COUNT = 300;
 
@@ -59,12 +62,23 @@ openFolderBtn.addEventListener("click", () => folderInput.click());
 
 folderInput.addEventListener("change", () => {
   selectedFiles = Array.from(folderInput.files);
-  if (selectedFiles.length === 0) return;
+  projectPath = null;
+  indexBtn.disabled = true;
+  questionInput.disabled = true;
+  askBtn.disabled = true;
+  if (selectedFiles.length === 0) {
+    statusEl.textContent = "No files selected.";
+    return;
+  }
 
   // Filter down to only files the backend knows how to index.
   selectedFiles = selectedFiles.filter((file) => {
     const ext = "." + file.name.split(".").pop().toLowerCase();
-    return UPLOADABLE_EXTENSIONS.has(ext);
+    const pathParts = file.webkitRelativePath.replace(/\\/g, "/").split("/");
+    const ignoredDirectory = pathParts.slice(1, -1).some(
+      (part) => part.startsWith(".") || IGNORED_UPLOAD_DIRS.has(part)
+    );
+    return UPLOADABLE_EXTENSIONS.has(ext) && !ignoredDirectory;
   });
 
   if (selectedFiles.length === 0) {
@@ -83,7 +97,6 @@ folderInput.addEventListener("change", () => {
   const rootFolderName = selectedFiles[0].webkitRelativePath.split("/")[0];
   statusEl.textContent = `${rootFolderName} (${selectedFiles.length} files, ${(totalSize / (1024 * 1024)).toFixed(1)} MB) — click Index Project`;
   indexBtn.disabled = false;
-  projectPath = null; // needs re-indexing since it's a new selection
 
   renderFileTree(selectedFiles);
 });
@@ -185,6 +198,8 @@ indexBtn.addEventListener("click", async () => {
   indexBtn.disabled = true;
   indexBtn.textContent = "Uploading…";
   statusEl.textContent = "Uploading files to server…";
+  questionInput.disabled = true;
+  askBtn.disabled = true;
 
   try {
     // Step 1: upload every selected file, preserving folder structure via filename
@@ -202,6 +217,9 @@ indexBtn.addEventListener("click", async () => {
       throw new Error(`Upload failed (${uploadRes.status}): ${errorText}`);
     }
     const uploadData = await uploadRes.json();
+    if (typeof uploadData.project_path !== "string" || !uploadData.project_path) {
+      throw new Error("Upload succeeded but the backend did not return a project path.");
+    }
     projectPath = uploadData.project_path;
 
     // Step 2: index the now-uploaded project on the server
@@ -220,7 +238,7 @@ indexBtn.addEventListener("click", async () => {
     const indexData = await indexRes.json();
 
     if (indexData.error) {
-      statusEl.textContent = "Error: " + indexData.error;
+      throw new Error(indexData.error);
     } else {
       statusEl.textContent = "Ready — ask a question below";
       questionInput.disabled = false;
@@ -232,6 +250,8 @@ indexBtn.addEventListener("click", async () => {
     statusEl.textContent = message;
     console.error(err);
     projectPath = null;
+    questionInput.disabled = true;
+    askBtn.disabled = true;
   } finally {
     indexBtn.disabled = false;
     indexBtn.textContent = "Index Project";

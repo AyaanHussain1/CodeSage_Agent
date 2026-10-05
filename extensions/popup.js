@@ -1,8 +1,5 @@
-// Address of your local Python backend (see backend/server.py)
-const API_URL =
-    window.location.hostname === "localhost"
-        ? "http://localhost:8000"
-        : "https://dependable-connection-production-41ff.up.railway.app";
+// The local Python backend must be running on this computer (see backend/server.py).
+const API_URL = "http://localhost:8000";
 
 // --- Grab all the HTML elements we need ---
 const videoIdInput = document.getElementById("videoIdInput");
@@ -101,6 +98,11 @@ function extractVideoId(url) {
 // Checks the currently active browser tab. If it's a YouTube video,
 // fills in the video ID automatically and loads it right away.
 async function autoDetectVideo() {
+  if (!globalThis.chrome?.tabs?.query) {
+    statusEl.textContent = "Paste a YouTube video ID to get started";
+    return;
+  }
+
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab || !tab.url) return;
 

@@ -7,6 +7,7 @@ import os
 from langchain_classic.retrievers import ContextualCompressionRetriever  
 from langchain_classic.retrievers.document_compressors import LLMChainExtractor
 
+load_dotenv()
 embedding = OpenAIEmbeddings()
 video_id = "ukzFI9rgwfU"
 
@@ -52,7 +53,7 @@ def get_vector_store(video_id, to_translate="en", force_refresh=False):
     # print(f"Vector store cached to {index_path}")
     return vector_store
 
-def get_retriever(video_id,to_translate="en",k=2,force_refresh=False):
+def get_retriever(video_id,to_translate="en",k=4,force_refresh=False):
     """
     Returns a retriever built on top of the cached/embedded vector store.
     k = number of relevant chunks to retrieve per query.
@@ -73,7 +74,7 @@ def get_retriever(video_id,to_translate="en",k=2,force_refresh=False):
         )
     return compression_retriever
 
-def search_transcript(video_id, query, to_translate="en", k=2):
+def search_transcript(video_id, query, to_translate="en", k=4):
 
     """
     Quick helper: search the video transcript for chunks relevant to a query.
@@ -91,7 +92,7 @@ def search_transcript(video_id, query, to_translate="en", k=2):
 # file is executed directly, not when the server imports it.
 if __name__ == "__main__":
     vector_store = get_vector_store(video_id, "en")
-    retriever = get_retriever(video_id, "en", k=2)
+    retriever = get_retriever(video_id, "en", k=4)
     results = search_transcript(video_id, "what is this video about?", "en")
     for r in results:
         print(r, "\n---")
